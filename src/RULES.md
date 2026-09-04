@@ -46,11 +46,12 @@ The model does not assume that the maximum amount a lender might approve is auto
 
 ### Emergency savings adjustment
 
-| What                  |       Value | Why                                                                         | Source       |
-| --------------------- | ----------: | --------------------------------------------------------------------------- | ------------ |
-| Savings below 1 month |  80% factor | Very limited emergency reserves increase vulnerability to repayment shocks. | My judgement |
-| Savings of 1–2 months |  90% factor | Some reserve exists, but the borrower remains exposed to income shocks.     | My judgement |
-| Savings of 3+ months  | 100% factor | A larger reserve provides more repayment resilience.                        | My judgement |
+| What                  |                  Value | Why                                                                                        | Source       |
+| --------------------- | ---------------------: | ------------------------------------------------------------------------------------------ | ------------ |
+| Savings below 1 month |             80% factor | Very limited emergency reserves increase vulnerability to repayment shocks.                | My judgement |
+| Savings of 1–2 months |             90% factor | Some reserve exists, but the borrower remains exposed to income shocks.                    | My judgement |
+| Savings of 3+ months  |            100% factor | A larger reserve provides more repayment resilience.                                       | My judgement |
+| Unknown savings       | Conservative treatment | Missing information should increase uncertainty rather than being treated as zero savings. | My judgement |
 
 Unknown savings are treated cautiously rather than as zero savings.
 
@@ -68,7 +69,9 @@ The 10% uplift is only an illustrative comparison point. It is **not** a predict
 
 The purpose is to show the borrower that a lender's possible capacity and the borrower's conservative safe amount are not necessarily the same.
 
-**Source: My judgement.**
+| What                              | Value | Why                                                                                                                       | Source       |
+| --------------------------------- | ----: | ------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Indicative lender capacity uplift |   10% | Provides an illustrative comparison between conservative borrower affordability and a potentially higher lender capacity. | My judgement |
 
 ---
 
@@ -93,7 +96,9 @@ The model uses:
 
 as the threshold for a materially excessive request.
 
-**Source: My judgement.**
+| What                        |              Value | Why                                                                                                                  | Source       |
+| --------------------------- | -----------------: | -------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Excessive-request threshold | Safe amount × 1.20 | Allows some difference between the requested amount and conservative safe amount before recommending a lower amount. | My judgement |
 
 ### Don't borrow
 
@@ -124,7 +129,9 @@ If expected additional income is below the conservative EMI ceiling, the recomme
 
 The application should not assume that projected business income will definitely materialize.
 
-**Source: My judgement.**
+| What                           |                                    Value | Why                                                                                     | Source       |
+| ------------------------------ | ---------------------------------------: | --------------------------------------------------------------------------------------- | ------------ |
+| Business expected-income check | Expected additional income < EMI ceiling | Prevents projected business income from being treated as guaranteed repayment capacity. | My judgement |
 
 ---
 
@@ -186,10 +193,11 @@ Existing EMI burden is measured using:
 
 **Existing FOIR = Existing monthly EMI / Monthly income**
 
-| Existing FOIR | Rate adjustment | Why                             | Source       |
-| ------------- | --------------: | ------------------------------- | ------------ |
-| > 40%         |         +1.0 pp | High existing repayment burden. | My judgement |
-| > 25%         |         +0.5 pp | Moderate repayment burden.      | My judgement |
+| Existing FOIR |   Rate adjustment | Why                                                                                     | Source       |
+| ------------: | ----------------: | --------------------------------------------------------------------------------------- | ------------ |
+|         > 40% |           +1.0 pp | High existing repayment burden.                                                         | My judgement |
+|         > 25% |           +0.5 pp | Moderate repayment burden.                                                              | My judgement |
+|         > 50% | Don't borrow rule | Existing repayment obligations already exceed the model's base affordability threshold. | My judgement |
 
 An existing EMI burden above the base 50% FOIR limit can independently result in a **Don't borrow** recommendation.
 
@@ -206,9 +214,9 @@ The model compares outstanding debt with annual stated income:
 **Debt-to-annual-income = Outstanding debt / (Monthly income × 12)**
 
 | Debt-to-annual-income |    Rate adjustment | Why                                                            | Source       |
-| --------------------- | -----------------: | -------------------------------------------------------------- | ------------ |
-| > 25%                 |            +0.5 pp | Significant outstanding debt relative to stated annual income. | My judgement |
-| > 50%                 | Additional +0.5 pp | Higher outstanding debt indicates greater financial exposure.  | My judgement |
+| --------------------: | -----------------: | -------------------------------------------------------------- | ------------ |
+|                 > 25% |            +0.5 pp | Significant outstanding debt relative to stated annual income. | My judgement |
+|                 > 50% | Additional +0.5 pp | Higher outstanding debt indicates greater financial exposure.  | My judgement |
 
 The model does not treat outstanding debt as equivalent to monthly EMI.
 
@@ -218,44 +226,45 @@ The model does not treat outstanding debt as equivalent to monthly EMI.
 
 If the borrower reports a recent missed or delayed payment:
 
-**+1.0 percentage point**
-
-is applied to the estimated fair-rate range.
-
-### Why?
-
-Recent repayment problems provide evidence of increased repayment risk.
-
-**Source: My judgement.**
+| What                          |                 Value | Why                                                                     | Source       |
+| ----------------------------- | --------------------: | ----------------------------------------------------------------------- | ------------ |
+| Recent missed/delayed payment | +1.0 percentage point | Recent repayment problems provide evidence of increased repayment risk. | My judgement |
 
 A combination of:
 
-* Existing debt above 30%
-* A recent missed payment
+* Recent missed payment
+* High-cost existing debt
 * Significant outstanding debt
 
 can result in a **Don't borrow** recommendation.
+
+The purpose is to avoid encouraging new borrowing when there is evidence that existing repayment obligations may already be difficult to manage.
 
 ---
 
 ## 13. Collateral and secured-product routing
 
-For business/self-employed borrowers:
+For business/self-employed borrowers, the application asks about available collateral.
 
-| Collateral              | Suggested route                               |
-| ----------------------- | --------------------------------------------- |
-| Property                | Loan Against Property / secured business loan |
-| Gold                    | Gold Loan / secured borrowing                 |
-| Another eligible asset  | Secured business loan                         |
-| No collateral / unknown | Selected loan type or unsecured route         |
+| Collateral              | Suggested route                               | Why                                                                                                   | Source       |
+| ----------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------ |
+| Property                | Loan Against Property / secured business loan | Property collateral may support a secured borrowing structure rather than an unsecured business loan. | My judgement |
+| Gold                    | Gold Loan / secured borrowing                 | Gold may support a secured borrowing structure.                                                       | My judgement |
+| Another eligible asset  | Secured business loan                         | Eligible collateral may allow a secured route.                                                        | My judgement |
+| No collateral / unknown | Selected loan type or unsecured route         | Without known eligible collateral, the model does not assume a secured route.                         | My judgement |
 
-### Why?
+### Important product-routing principle
 
-A borrower with eligible collateral may have access to a secured borrowing structure that differs materially from an unsecured business loan.
+The app should consider a secured route when the borrower has eligible collateral rather than automatically treating every business borrower as an unsecured borrower.
 
-The application does **not** guarantee approval, valuation or a lower rate.
+The application does **not** guarantee:
 
-**Source: My judgement.**
+* Loan approval
+* Collateral eligibility
+* Property valuation
+* Loan-to-value ratio
+* Final interest rate
+* Lender acceptance of the collateral
 
 ---
 
@@ -267,11 +276,9 @@ For business borrowers with eligible collateral:
 
 is applied to both ends of the fair-rate range.
 
-### Why?
-
-Secured borrowing may carry different pricing from comparable unsecured borrowing.
-
-**Source: My judgement.**
+| What                                |   Value | Why                                                                                | Source       |
+| ----------------------------------- | ------: | ---------------------------------------------------------------------------------- | ------------ |
+| Eligible collateral rate adjustment | -1.0 pp | Secured borrowing may carry different pricing from comparable unsecured borrowing. | My judgement |
 
 This is an illustrative adjustment, not a lender-specific pricing rule.
 
@@ -322,6 +329,12 @@ For the same principal:
 
 The purpose is to help borrowers understand that reducing EMI by extending tenure can increase total borrowing cost.
 
+| What                      | Value   | Why                                                                    | Source       |
+| ------------------------- | ------- | ---------------------------------------------------------------------- | ------------ |
+| Default comparison tenure | 5 years | Provides a representative middle-tenure example for cost calculations. | My judgement |
+| Short tenure              | 3 years | Demonstrates higher EMI and lower total interest.                      | My judgement |
+| Long tenure               | 7 years | Demonstrates lower EMI and higher total interest.                      | My judgement |
+
 ---
 
 ## 18. All-in borrowing cost
@@ -339,6 +352,11 @@ The application calculates:
 * Estimated total borrowing cost
 * Approximate APR
 
+| What                        |           Value | Why                                                                                  | Source       |
+| --------------------------- | --------------: | ------------------------------------------------------------------------------------ | ------------ |
+| Illustrative processing fee | 2% of principal | Demonstrates that borrowing cost can include fees beyond the headline interest rate. | My judgement |
+| Representative cost tenure  |         5 years | Provides a consistent example for comparing all-in cost.                             | My judgement |
+
 ### Important limitation
 
 The 2% processing fee is an illustrative assumption and is **not a lender quote**.
@@ -355,7 +373,11 @@ This is intended to demonstrate why:
 
 **APR / all-in cost can be higher than the headline interest rate.**
 
-It is an approximation for the prototype and should not be represented as an official lender-issued APR or Key Facts Statement.
+The APR calculation is an approximation for the prototype and should not be represented as an official lender-issued APR or Key Facts Statement.
+
+| What          | Value                                    | Why                                                                      | Source       |
+| ------------- | ---------------------------------------- | ------------------------------------------------------------------------ | ------------ |
+| APR treatment | Processing fee reduces borrower proceeds | Demonstrates the effect of upfront fees on the effective borrowing cost. | My judgement |
 
 ---
 
@@ -369,11 +391,15 @@ It then calculates stressed FOIR using:
 
 **(Existing EMI + recommended new EMI) / stressed monthly income**
 
+| What                    | Value | Why                                                                                | Source       |
+| ----------------------- | ----: | ---------------------------------------------------------------------------------- | ------------ |
+| Stress income reduction |   20% | Demonstrates how repayment affordability may change after a moderate income shock. | My judgement |
+
 ### Why?
 
 The stress case demonstrates how repayment affordability can change if income temporarily falls.
 
-**Source: My judgement.**
+The stress test is not a prediction that the borrower's income will actually fall by 20%.
 
 ---
 
@@ -396,13 +422,19 @@ The confidence levels are:
 
 Unknown information should generally widen uncertainty rather than automatically making the borrower appear risky.
 
+| What                        | Value                      | Why                                                                          | Source       |
+| --------------------------- | -------------------------- | ---------------------------------------------------------------------------- | ------------ |
+| High confidence threshold   | 6+ information points      | Indicates that multiple useful borrower signals are available.               | My judgement |
+| Medium confidence threshold | 3–5 information points     | Indicates that some useful information is available but uncertainty remains. | My judgement |
+| Low confidence threshold    | Below 3 information points | Indicates that important information is missing or uncertain.                | My judgement |
+
+Confidence does **not** mean that a lender will approve or reject the loan.
+
 ---
 
 ## 22. Adaptive questions
 
 The application uses conditional questions so different borrowers do not receive exactly the same questionnaire.
-
-Examples:
 
 ### Salaried borrower
 
@@ -417,6 +449,12 @@ May receive:
 * Income stability
 * Business tenure
 * Collateral availability
+
+### Informal borrower
+
+May receive:
+
+* Income stability
 
 ### Borrower with existing EMIs
 
@@ -442,9 +480,11 @@ Each adaptive question is intended to change an output such as:
 * Confidence
 * Stress/affordability assessment
 
+The design principle is that a question should only be included when its answer can materially affect an output.
+
 ---
 
-## 23. Persona assumptions
+## 23. Persona assumptions and test scenarios
 
 ### Priya
 
@@ -462,6 +502,14 @@ The prototype uses:
 
 The persona does not provide the exact existing loan interest rate, so any value entered for that adaptive question is an explicit test assumption.
 
+The expected prototype outcome is broadly:
+
+* **Borrow**
+* High confidence
+* Safe amount above the requested ₹8 lakh
+* Personal Loan route
+* Stronger pricing range due to the known 780 credit score and stable salaried profile
+
 ---
 
 ### Ravi
@@ -477,11 +525,21 @@ The prototype uses:
 * Emergency savings: 1–2 months
 * Variable/seasonal income
 * Business tenure: 14 years
-* Property collateral: No
+* Property collateral: **Yes — unencumbered shop premises**
 * Expected additional monthly income: ₹20,000
 * Business loan request: ₹15,00,000
 
 ₹60,000 is used as a midpoint of the stated ₹40,000–₹80,000 income range for the prototype.
+
+The primary Ravi scenario tests whether the borrower is routed toward a secured product because eligible property collateral is available.
+
+The expected prototype product route is:
+
+**Loan Against Property / secured business loan**
+
+The prototype also supports a sensitivity test where collateral is changed to **No**. In that case, the app should fall back toward the selected Business Loan/unsecured route rather than assuming secured borrowing.
+
+Because Ravi has variable income, an unknown credit score and a large requested amount relative to conservative affordability, the prototype may recommend **Borrow less** even though secured routing is available.
 
 ---
 
@@ -504,6 +562,12 @@ The prototype uses:
 
 ₹28,000 is used as a midpoint of the stated ₹26,000–₹30,000 monthly income range.
 
+The expected prototype outcome is:
+
+**Don't borrow**
+
+This reflects the combination of limited affordability, low emergency savings, uncertain income, recent repayment trouble and existing high-cost debt.
+
 ---
 
 ## 24. Important limitations
@@ -521,6 +585,8 @@ Borrower Copilot does not:
 * Replace lender underwriting.
 * Provide regulated financial advice.
 
+The rate bands, affordability thresholds, safety buffers, processing fee and pricing adjustments are prototype assumptions unless explicitly stated otherwise.
+
 All outputs should therefore be presented as **decision-support estimates**.
 
 ---
@@ -536,3 +602,15 @@ from
 **What the borrower can conservatively afford.**
 
 The borrower should use the **conservative safe amount and recommended EMI ceiling as the primary reference**, rather than treating indicative lender capacity as an approval promise.
+
+The Negotiation Card is designed to help the borrower ask better questions about:
+
+* Interest rate
+* APR/all-in cost
+* Processing fees
+* EMI
+* Tenure
+* Prepayment/other charges
+* Whether a secured product may be more appropriate
+
+The goal is not to tell the borrower that a particular lender must offer a specific rate. The goal is to provide a transparent, explainable reference point for comparing and negotiating loan offers.
